@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>To-Do List</title>
+</head>
+<body>
+    <h1>Todos</h1>
+    <ul>
+        {% for todo in todos %}
+            <li>
+                <form action="{{ url_for('delete', index=loop.index0) }}" method="post" style="display: inline;">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <input type="submit" value="Delete">
+                </form>
+                <input type="checkbox" name="done" {% if todo['done'] %}checked{% endif %} onchange="this.form.submit()">
+                <span {% if todo['done'] %}style="text-decoration: line-through"{% endif %}>{{ todo['title'] }} - {{ todo['description'] }} - {{ todo['time'] }}</span>
+                {% if todo['image'] %}
+                    <img src="{{ todo['image'] }}" alt="Todo Image">
+                {% endif %}
+                <a href="{{ url_for('check', index=loop.index0) }}">Check</a>
+                <a href="{{ url_for('edit', index=loop.index0) }}">Edit</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <form action="{{ url_for('add') }}" method="post">
+        <label for="title">Title:</label>
+        <input type="text" name="title" required>
+
+        <label for="description">Description:</label>
+        <input type="text" name="description" required>
+
+        <label for="time">Time:</label>
+        <input type="text" name="time" required>
+
+        <!-- For image upload, use type="file" -->
+        <label for="image">Image:</label>
+        <input type="file" name="image">
+
+        <button type="submit">Add Todo</button>
+    </form>
+</body>
+</html>
